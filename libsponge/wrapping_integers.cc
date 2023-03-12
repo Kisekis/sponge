@@ -1,5 +1,5 @@
 #include "wrapping_integers.hh"
-
+#include <iostream>
 // Dummy implementation of a 32-bit wrapping integer
 
 // For Lab 2, please replace with a real implementation that passes the
@@ -14,8 +14,10 @@ using namespace std;
 //! \param n The input absolute 64-bit sequence number
 //! \param isn The initial sequence number
 WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
-    DUMMY_CODE(n, isn);
-    return WrappingInt32{0};
+    uint64_t r = 2;
+    r = r<<31;
+    uint32_t warped = (n%(r)+ isn.raw_value())%(r);
+    return WrappingInt32{warped};
 }
 
 //! Transform a WrappingInt32 into an "absolute" 64-bit sequence number (zero-indexed)
@@ -28,7 +30,13 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! runs from the local TCPSender to the remote TCPReceiver and has one ISN,
 //! and the other stream runs from the remote TCPSender to the local TCPReceiver and
 //! has a different ISN.
-uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
-    DUMMY_CODE(n, isn, checkpoint);
-    return {};
+uint64_t unwrap(WrappingInt32 sn, WrappingInt32 isn, uint64_t checkpoint) {
+    uint64_t r = 1;
+    r = r<<32;
+    uint32_t diff = (r - isn.raw_value())%r + sn.raw_value();
+    uint64_t ret = static_cast<uint64_t>(diff);
+    if(ret > checkpoint) return ret;
+    uint64_t upperbound = (1ul<<31) + checkpoint - ret;
+    int k = upperbound/(1ul<<32);
+    return ret + k*(1ul<<32);
 }

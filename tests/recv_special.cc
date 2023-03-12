@@ -34,7 +34,7 @@ int main() {
         /* segment with SYN + data */
         {
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
-            TCPReceiverTestHarness test{4000};
+            TCPReceiverTestHarness test{4001};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
             test.execute(SegmentArrives{}
                              .with_syn()
@@ -50,7 +50,7 @@ int main() {
         /* empty segment */
         {
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
-            TCPReceiverTestHarness test{4000};
+            TCPReceiverTestHarness test{4002};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
             test.execute(SegmentArrives{}.with_syn().with_seqno(isn).with_result(SegmentArrives::Result::OK));
             test.execute(ExpectState{TCPReceiverStateSummary::SYN_RECV});
@@ -69,7 +69,7 @@ int main() {
         /* segment with null byte */
         {
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
-            TCPReceiverTestHarness test{4000};
+            TCPReceiverTestHarness test{4003};
             const string text = "Here's a null byte:"s + '\0' + "and it's gone."s;
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
             test.execute(SegmentArrives{}.with_syn().with_seqno(isn).with_result(SegmentArrives::Result::OK));
@@ -85,7 +85,7 @@ int main() {
         /* segment with data + FIN */
         {
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
-            TCPReceiverTestHarness test{4000};
+            TCPReceiverTestHarness test{4004};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
             test.execute(SegmentArrives{}.with_syn().with_seqno(isn).with_result(SegmentArrives::Result::OK));
             test.execute(ExpectState{TCPReceiverStateSummary::SYN_RECV});
@@ -103,7 +103,7 @@ int main() {
         /* segment with FIN (but can't be assembled yet) */
         {
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
-            TCPReceiverTestHarness test{4000};
+            TCPReceiverTestHarness test{4005};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
             test.execute(SegmentArrives{}.with_syn().with_seqno(isn).with_result(SegmentArrives::Result::OK));
             test.execute(ExpectState{TCPReceiverStateSummary::SYN_RECV});
@@ -126,7 +126,7 @@ int main() {
         /* segment with SYN + data + FIN */
         {
             uint32_t isn = uniform_int_distribution<uint32_t>{0, UINT32_MAX}(rd);
-            TCPReceiverTestHarness test{4000};
+            TCPReceiverTestHarness test{4006};
             test.execute(ExpectState{TCPReceiverStateSummary::LISTEN});
             test.execute(SegmentArrives{}
                              .with_syn()

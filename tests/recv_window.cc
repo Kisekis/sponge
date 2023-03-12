@@ -39,7 +39,7 @@ int main() {
 
         {
             // Window size expands upon read
-            size_t cap = 4000;
+            size_t cap = 4001;
             uint32_t isn = 23452;
             TCPReceiverTestHarness test{cap};
             test.execute(SegmentArrives{}.with_syn().with_seqno(isn).with_result(SegmentArrives::Result::OK));

@@ -21,7 +21,7 @@ class StreamReassembler {
     };
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
-    
+  public:
     size_t _first_unread{0};
     size_t _first_unassembled{0};
     size_t _first_unacceptable{0};
@@ -59,7 +59,7 @@ class StreamReassembler {
     //! \brief Is the internal state empty (other than the output stream)?
     //! \returns `true` if no substrings are waiting to be assembled
     bool empty() const;
-
+private:
     void push_data_into_buffer(const std::string &data, const size_t index, const bool eof);
 
     bool is_buffer_full();
