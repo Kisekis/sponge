@@ -9,6 +9,24 @@
 #include <functional>
 #include <queue>
 
+class Timer {
+  private:
+    
+    size_t rto{0};
+    size_t start_time{0};
+
+  public:
+    bool is_start{false};
+    Timer(size_t init_rto) : rto(init_rto) {}
+    void start(size_t cur_time) {
+        start_time = cur_time;
+        is_start = true;
+    };
+    void close() { is_start = false; }
+    void reset() { rto = 2 * rto; }
+    void reset(const size_t init_rto) { rto = init_rto; }
+    bool expired(const size_t cur_time) { return is_start && (cur_time - start_time) >= rto; }
+};
 //! \brief The "sender" part of a TCP implementation.
 
 //! Accepts a ByteStream, divides it up into segments and sends the
@@ -23,14 +41,31 @@ class TCPSender {
     //! outbound queue of segments that the TCPSender wants sent
     std::queue<TCPSegment> _segments_out{};
 
-    //! retransmission timer for the connection
+    //! retransmission timer for the connection  init RTO
     unsigned int _initial_retransmission_timeout;
 
+    
     //! outgoing stream of bytes that have not yet been sent
     ByteStream _stream;
 
     //! the (absolute) sequence number for the next byte to be sent
-    uint64_t _next_seqno{0};
+    uint64_t _next_seqno{0};//SYN = 0
+
+    size_t cur_time{0};
+
+    // struct outstanding_seg{
+    //   TCPSegment seg;
+    //   size_t sent_time{0};
+    //   size_t passed_time(size_t cur_time) {return cur_time - sent_time;}
+    //   outstanding_seg(const TCPSegment& segg, size_t cur_time) : seg(segg), sent_time(cur_time){}
+    // };
+    std::queue<TCPSegment> outstanding_queue;
+    Timer timer;
+    size_t _window_size{1};
+    size_t consecutive{0};
+    WrappingInt32 _ackno;// 
+    size_t _bytes_in_flight{0};
+    bool finish{false};
 
   public:
     //! Initialize a TCPSender
@@ -88,5 +123,6 @@ class TCPSender {
     WrappingInt32 next_seqno() const { return wrap(_next_seqno, _isn); }
     //!@}
 };
+
 
 #endif  // SPONGE_LIBSPONGE_TCP_SENDER_HH

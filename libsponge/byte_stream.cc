@@ -62,13 +62,13 @@ std::string ByteStream::read(const size_t len) {
 
 void ByteStream::end_input() { is_end = true; }
 
-bool ByteStream::input_ended() const { return is_end; }
+bool ByteStream::input_ended() const { return is_end; } //ByteStream的输入终止了
 
 size_t ByteStream::buffer_size() const { return q.size(); }
 
 bool ByteStream::buffer_empty() const { return q.empty(); }
 
-bool ByteStream::eof() const { return is_end && q.empty(); }
+bool ByteStream::eof() const { return is_end && q.empty(); }//ByteStream被读完了
 
 size_t ByteStream::bytes_written() const { return m_bytes_written; }
 
