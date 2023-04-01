@@ -26,13 +26,15 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
             }
             return;
         }else {
+            all_data_size += seg.payload().size();
             goto push;
         }
     }else if(!ISN_found) {
         return;
     }
+    all_data_size += seg.payload().size();
     curr_seqno = seg.header().seqno;
-    stream_indices = unwrap(curr_seqno, ISN, 0) - 1;
+    stream_indices = unwrap(curr_seqno, ISN, all_data_size) - 1;
     //push any data, or end-of-stream marker, to the StreamReassembler
 push:    
     string data = seg.payload().copy();

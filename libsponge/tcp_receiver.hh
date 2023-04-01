@@ -23,6 +23,7 @@ class TCPReceiver {
     WrappingInt32 ISN;
     bool ISN_found = false;
     bool is_eof = false;
+    uint64_t all_data_size{0};
     // WrappingInt32 ackno;
     // WrappingInt32 right;
   public:
