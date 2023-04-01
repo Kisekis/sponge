@@ -65,14 +65,14 @@ void TCPSender::fill_window() {
                 _bytes_in_flight++;
                 remaining_space--;
                 finish = true;
-            }else if(payload_size == 0) return;
+            }
         }
         _segments_out.push(seg);
         if(!timer.is_start) {
             timer.start(cur_time);
         }
         outstanding_queue.push(seg);
-    //    if(payload_size == 0) return; 
+       if(payload_size == 0) return; 
     }
     
     // fill the window with segments

@@ -21,6 +21,10 @@ class TCPConnection {
     //! in case the remote TCPConnection doesn't know we've received its whole stream?
     bool _linger_after_streams_finish{true};
 
+    size_t _curr_seg_time{0};
+    size_t _last_seg_time{0};
+    size_t _time_since_last_segment_received{0};
+    bool _active{false};
   public:
     //! \name "Input" interface for the writer
     //!@{
@@ -80,12 +84,15 @@ class TCPConnection {
     bool active() const;
     //!@}
 
+    void send_segments();
     //! Construct a new connection from a configuration
     explicit TCPConnection(const TCPConfig &cfg) : _cfg{cfg} {}
 
     //! \name construction and destruction
     //! moving is allowed; copying is disallowed; default construction not possible
-
+    void unclean_shutdown();
+    void clean_shutdown();
+    void close(bool clear);
     //!@{
     ~TCPConnection();  //!< destructor sends a RST if the connection is still open
     TCPConnection() = delete;

@@ -66,7 +66,6 @@ class TCPSender {
     WrappingInt32 _ackno;// 
     size_t _bytes_in_flight{0};
     bool finish{false};
-
   public:
     //! Initialize a TCPSender
     TCPSender(const size_t capacity = TCPConfig::DEFAULT_CAPACITY,
